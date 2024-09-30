@@ -1,0 +1,44 @@
+name: Lint PR and Pushes
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master'}}
+
+jobs:
+  linter:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.11
+
+    - name: Install Poetry
+      uses: abatilo/actions-poetry@v3
+
+    - name: Install dependencies and linters
+      run: poetry install --no-root --only linters
+
+    - name: Run Black - Python Code Formatter
+      run: poetry run black --check .
+
+    - name: Run Flake8 - Python Code Linting
+      run: poetry run flake8 .
+
+    - name: Run Mypy - Static Type Checking
+      run: poetry run mypy .
+
+    - name: Run Isort - Import Sorting
+      run: poetry run isort --check .
