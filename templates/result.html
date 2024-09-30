@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results for {{ topic }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body>
+    <div class="container">
+        <h1>Results for {{ topic }}</h1>
+        <h2>News Articles</h2>
+        <ul>
+            {% for article in news %}
+            <li>
+                <strong>{{ article['title'] }}</strong> - {{ article['source']['name'] }} <br>
+                <a href="{{ article['url'] }}" target="_blank">Read more</a>
+            </li>
+            {% endfor %}
+        </ul>
+        <h2>Generated Historical Content</h2>
+        <p>{{ content }}</p>
+        <a href="/path_to_pdf/{{ topic }}.pdf" class="btn btn-success">Download PDF</a>
+        <br><br>
+        <a href="/" class="btn btn-primary">Go Back</a>
+    </div>
+</body>
+</html>
